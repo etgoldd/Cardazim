@@ -5,10 +5,11 @@ import socket
 
 
 def process_message(raw_msg: bytes) -> str:
-    pass
+    return raw_msg.decode('utf8')
 
 def decode_length(raw_length: bytes) -> int:
     return struct.unpack("<i", raw_length)[0]
+
 
 def run_server(server_ip: str, server_port: int) -> NoReturn:
     server_sock = socket.socket()
@@ -24,15 +25,12 @@ def run_server(server_ip: str, server_port: int) -> NoReturn:
         # TODO FINISH ME
 
 
-
 def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("IPv4",
-                        required=True,
                         type=str,
                         help="The server's IPv4 address")
     parser.add_argument("port",
-                        required=True,
                         type=int,
                         help="The port the server will listen on")
     return parser.parse_args()
