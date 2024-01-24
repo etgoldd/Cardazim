@@ -1,0 +1,2 @@
+
+ENCODING_STANDARD = 'utf8'

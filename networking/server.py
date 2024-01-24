@@ -1,43 +1,25 @@
 from typing import NoReturn
 import threading
 import argparse
-import struct
-import socket
 
 
-def process_message(raw_msg: bytes) -> str:
-    return raw_msg.decode('utf8')
-
-def decode_length(raw_length: bytes) -> int:
-    print(raw_length)
-    return struct.unpack("<i", raw_length)[0]
+from networking.listener import Listener
+from networking.connection import Connection
 
 
 def run_server(server_ip: str, server_port: int) -> NoReturn:
-    server_sock = socket.socket()
-    server_sock.bind((server_ip, server_port))
-
-    while True:
-        server_sock.listen(10)  # 10 - To avoid multiple connections being dropped if attempted at the same time.
-        conn_sock, conn_address = server_sock.accept()
-
-        conn_thread = threading.Thread(target=manage_conn, args=[conn_sock])
-        conn_thread.start()
+    with Listener(server_ip, server_port) as listener:
+        while True:
+            conn = listener.accept()
+            # Why did we demand connection to be a context manager? That doesn't work with multithreading very well
+            connection_thread = threading.Thread(target=manage_conn, args=[conn])
+            connection_thread.start()
 
 
-def manage_conn(conn_sock: socket.socket):
-    while True:
-        message_length_bytes = conn_sock.recv(4)
-        if not message_length_bytes:  # Empty byte string means connection was closed
-            break
-        msg_len = decode_length(message_length_bytes)
-        raw_msg = conn_sock.recv(msg_len)
-        decoded_message = process_message(raw_msg)
-        print(f"received message: {decoded_message}")
-        # This wasn't requested, but it feels necessary.
-        if decoded_message == "bye.":
-            break
-    conn_sock.detach()
+def manage_conn(connection: Connection):
+    with connection as conn:
+        message = conn.receive_message()
+        print(f"received message: {message}")
 
 
 def get_args() -> argparse.Namespace:

@@ -5,21 +5,16 @@ import sys
 ###########################################################
 ####################### YOUR CODE #########################
 ###########################################################
-import struct
-import socket
+from networking.connection import Connection
+
 
 def send_data(server_ip: str, server_port: int, data: str):
     '''
     Send data to server in address (server_ip, server_port).
     '''
-    sock = socket.socket()
-    sock.connect((server_ip, server_port))
-    encoded_data = struct.pack(f">i{len(data)}s", len(data), data.encode('utf8'))
-
-    print("Sending data...")
-    sock.send(encoded_data)
-    sock.close()
-
+    with Connection.connect(server_ip, server_port) as conn:
+        print(f"Sending data...")
+        conn.send_message(data)
 
 ###########################################################
 ##################### END OF YOUR CODE ####################
