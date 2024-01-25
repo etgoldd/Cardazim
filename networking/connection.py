@@ -43,11 +43,15 @@ class Connection:
             raise DisconnectionException()
         message_length = struct.unpack("<i", length_bytes)[0]
         # Note the requested message format if this isn't clear.
-        raw_msg = self.sock.recv(message_length)
+        raw_msg = self.sock.recv(2**8)
         message = b""
-        while raw_msg:
+
+        while len(message) < message_length:
             message += raw_msg
-            raw_msg = self.sock.recv(message_length)
+            raw_msg = self.sock.recv(2**8)
+            if raw_msg == b'':
+                self.close()
+                raise DisconnectionException()
 
         return message
 
