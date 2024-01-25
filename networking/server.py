@@ -5,6 +5,7 @@ import argparse
 
 from networking.listener import Listener
 from networking.connection import Connection
+from game.card import Card
 
 
 def run_server(server_ip: str, server_port: int) -> NoReturn:
@@ -19,7 +20,8 @@ def run_server(server_ip: str, server_port: int) -> NoReturn:
 def manage_conn(connection: Connection):
     with connection as conn:
         message = conn.receive_message()
-        print(f"received message: {message}")
+        card = Card.deserialize(message)
+        print(f"received message: {repr(card)}")
 
 
 def get_args() -> argparse.Namespace:

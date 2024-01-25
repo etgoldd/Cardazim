@@ -23,6 +23,10 @@ class Listener:
         # Note: the listener can close while the connection stays open.
 
     def accept(self) -> Connection:
+        """
+        Accepts a connection, and returns a Connection object representing the connection.
+        :return: A new connection
+        """
         remote_socket, _ = self.sock.accept()
         self.connection = Connection(remote_socket)
         return self.connection

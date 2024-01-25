@@ -3,7 +3,6 @@ import struct
 
 
 from networking.exceptions import DisconnectionException
-from constants import *
 
 
 class Connection:
@@ -27,14 +26,14 @@ class Connection:
             # Hasn't connected yet, This shouldn't really happen, but it's good to have
             return f"<Connection object {local_addr[0]}:{local_addr[1]} (Unconnected)>"
 
-    def send_message(self, message: str) -> None:
+    def send_message(self, message: bytes) -> None:
         """
         Sends a message to the connection in the requested format. The function will format the message correctly.
         """
-        encoded_data = struct.pack(f">i{len(message)}s", len(message), message.encode(ENCODING_STANDARD))
+        encoded_data = struct.pack(f">i{len(message)}s", len(message), message)
         self.sock.send(encoded_data)
 
-    def receive_message(self) -> str:
+    def receive_message(self) -> bytes:
         """
         Receives a message from the connection in the requested format, and returns the decoded message.
         """
@@ -45,10 +44,12 @@ class Connection:
         message_length = struct.unpack("<i", length_bytes)[0]
         # Note the requested message format if this isn't clear.
         raw_msg = self.sock.recv(message_length)
-        if not raw_msg:
-            self.close()
-            raise DisconnectionException()
-        return raw_msg.decode(ENCODING_STANDARD)
+        message = b""
+        while raw_msg:
+            message += raw_msg
+            raw_msg = self.sock.recv(message_length)
+
+        return message
 
     @classmethod
     def connect(cls, host: str, port: int):

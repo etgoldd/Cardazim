@@ -1,14 +1,11 @@
 import argparse
 import sys
 
-
-###########################################################
-####################### YOUR CODE #########################
-###########################################################
 from networking.connection import Connection
+from game.card import Card
 
 
-def send_data(server_ip: str, server_port: int, data: str):
+def send_data(server_ip: str, server_port: int, data: bytes):
     '''
     Send data to server in address (server_ip, server_port).
     '''
@@ -16,19 +13,23 @@ def send_data(server_ip: str, server_port: int, data: str):
         print(f"Sending data...")
         conn.send_message(data)
 
-###########################################################
-##################### END OF YOUR CODE ####################
-###########################################################
-
 
 def get_args():
     parser = argparse.ArgumentParser(description='Send data to server.')
-    parser.add_argument('server_ip', type=str,
-                        help='the server\'s ip')
-    parser.add_argument('server_port', type=int,
-                        help='the server\'s port')
-    parser.add_argument('data', type=str,
-                        help='the data')
+    parser.add_argument("IPv4", type=str,
+                        help="The IP to which you want to send the card")
+    parser.add_argument("port", type=str,
+                        help="The port to which you want to send the card")
+    parser.add_argument("name", type=str,
+                        help="The name of the card")
+    parser.add_argument("creator", type=str,
+                        help="The creator of the card")
+    parser.add_argument("image_path", type=str,
+                        help="The path to the image file")
+    parser.add_argument("riddle", type=str,
+                        help="The riddle")
+    parser.add_argument("solution", type=str,
+                        help="The solution to the riddle")
     return parser.parse_args()
 
 
@@ -37,8 +38,10 @@ def main():
     Implementation of CLI and sending data to server.
     '''
     args = get_args()
+    card = Card.create_from_path(args.name, args.creator, args.image_path, args.riddle, args.solution)
+    card.encrypt_card()
     try:
-        send_data(args.server_ip, args.server_port, args.data)
+        send_data("127.0.0.1", 6666, card.serialize())
         print('Done.')
     except Exception as error:
         print(f'ERROR: {error}')
