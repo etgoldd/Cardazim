@@ -80,10 +80,3 @@ class Connection:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
-
-
-if __name__ == '__main__':
-    # Some minor testing, left this here to show work
-    with Connection.connect("127.0.0.1", 6666) as connection:
-        connection.send_message("ay karamba")
-

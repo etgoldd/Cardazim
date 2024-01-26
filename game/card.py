@@ -86,7 +86,7 @@ class Card:
                 bytes(self.riddle, 'utf8'),
                 )
 
-    def serialize(self) -> bytes:
+    def serialise(self) -> bytes:
         """
         This returns the serialization of the card object.
         """
@@ -162,7 +162,7 @@ if __name__ == '__main__':
     card = Card.create_from_path(name=name, creator=creator, riddle=riddle, solution=solution, path=path)
     card.image.image.show()
     card.image.encrypt(card.solution)
-    data = card.serialize()
+    data = card.serialise()
     card2 = Card.deserialize(data)
     card2.image.image.show()
     if card2.image.decrypt(solution):

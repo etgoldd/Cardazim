@@ -41,7 +41,7 @@ def main():
     card = Card.create_from_path(args.name, args.creator, args.image_path, args.riddle, args.solution)
     card.encrypt_card()
     try:
-        send_data("127.0.0.1", 6666, card.serialize())
+        send_data("127.0.0.1", 6666, card.serialise())
         print('Done.')
     except Exception as error:
         print(f'ERROR: {error}')

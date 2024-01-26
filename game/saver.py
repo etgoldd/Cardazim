@@ -63,7 +63,7 @@ class Saver:
             dir_path = Path('.')
         card_path = dir_path / card.name
         os.mkdir(card_path)
-        card_data = card.serialize()
+        card_data = card.serialise()
 
         with open(card_path, mode="wb") as card_file:
             card_file.write(card_data)
