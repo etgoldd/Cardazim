@@ -92,9 +92,6 @@ class ChooseCardsForm(npyscreen.ActionForm):
 
 class SolveCardForm(npyscreen.Form):
 
-    ###########################################################
-    ####################### YOUR CODE #########################
-    ###########################################################
     def __init__(self, unsolved_dir: str, solved_dir: str, *args, **kwargs):
         self.unsolved_dir = Path(unsolved_dir)
         self.solved_dir = Path(solved_dir)
@@ -139,10 +136,6 @@ class SolveCardForm(npyscreen.Form):
             # os.remove(unsolved_file)
         print(f'{CARD_STR.format(card=card)} was solved correctly!')
         print(f'The solution was: {solution}')
-
-    ###########################################################
-    ##################### END OF YOUR CODE ####################
-    ###########################################################
 
     def solve(self, card: Card, solution):
         if self.check_solution(card, solution):
