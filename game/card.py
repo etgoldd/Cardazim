@@ -10,6 +10,7 @@ class Card:
     name: str
     creator: str
     image: CryptImage
+    image_path: str
     riddle: str
     solution: Optional[str] = None
 
@@ -35,7 +36,10 @@ class Card:
         Attempts to decrypt the card's image with given key. Returns True if the decryption succeeded,
         and False otherwise.
         """
-        return self.image.decrypt(key)
+        decrypt_success = self.image.decrypt(key)
+        if decrypt_success:
+            self.solution = key
+        return decrypt_success
 
     def set_image(self, image: Image.Image):
         """
@@ -49,6 +53,7 @@ class Card:
         card_obj.name = name
         card_obj.creator = creator
         card_obj.image = CryptImage()
+        card_obj.image_path = path
         card_obj.image.set_image(Image.open(path))
         card_obj.image.key_hash = None
 
@@ -86,8 +91,8 @@ class Card:
         This returns the serialization of the card object.
         """
         struct_format = self._generate_struct_format()
-        serial = struct.pack(struct_format, *self._generate_format_parameters())
-        return serial
+        serialisation = struct.pack(struct_format, *self._generate_format_parameters())
+        return serialisation
 
     @staticmethod
     def extract_format(data: bytes, struct_format: str, field_size: int) -> tuple[Any, bytes]:
@@ -133,6 +138,18 @@ class Card:
         card_obj.riddle = riddle_bytes.decode('utf8')
 
         return card_obj
+
+    def get_attributes(self):
+        # May turn this into a property later, no need currently
+        return {
+            "name": self.name,
+            "creator": self.creator,
+            "riddle": self.riddle,
+            "solution": self.solution,
+            "path": self.image_path,
+        }
+
+
 
 
 if __name__ == '__main__':
