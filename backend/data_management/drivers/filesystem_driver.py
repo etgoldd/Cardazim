@@ -34,7 +34,7 @@ class FilesystemDriver(BaseDriver):
         return True
 
     def save_unsolved_card(self, card: Card) -> bool:
-        card_path = self.unsolved_dir / card.get_id()
+        card_path = self.unsolved_dir / (card.creator + card.name)
         if card_path.exists():
             print(f"Card at {card_path} already exists! Potentially a duplicate card? Not saving")
             return False
@@ -63,11 +63,11 @@ class FilesystemDriver(BaseDriver):
             cards.append(card)
         return cards
 
-    def get_unsolved_card_by_id(self, _id: str = None) -> list[Card]:
+    def get_unsolved_card_by_name(self, name: str = None) -> list[Card]:
         # unsolved cards are kept using only their serialisation.
-        if _id is None:
+        if name is None:
             return self._get_all_unsolved_cards()
-        card_path = self.unsolved_dir / _id
+        card_path = self.unsolved_dir / name
         if not card_path.exists():
             raise FileNotFoundError(f"No such unsolved card {card_path}\n Maybe its been solved already?")
         card = self._serialisation_file_to_card(card_path)

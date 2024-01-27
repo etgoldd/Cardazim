@@ -51,15 +51,17 @@ class Card:
         self.image.set_image(image)
 
     @classmethod
-    def create_from_path(cls, name: str, creator: str, path: str, riddle: str, solution: Optional[str] = None) -> Card:
+    def create_from_path(cls, name: str, creator: str, path: str, riddle: str, solution: Optional[str] = None, key_hash: Optional[str] = None) -> Card:
         card_obj = cls()
         card_obj.name = name
         card_obj.creator = creator
         card_obj.image = CryptImage()
         card_obj.image_path = path
         card_obj.image.set_image(Image.open(path))
-        card_obj.image.key_hash = None
+        if not ((key_hash is None) ^ (solution is None)):  # If one is None and the other isn't
+            raise ValueError("Either key_hash or solution must be None, not both, nor neither")
 
+        card_obj.image.key_hash = key_hash
         card_obj.riddle = riddle
         card_obj.solution = solution
         return card_obj
@@ -198,11 +200,6 @@ class Card:
             raise e
         new_card.set_image(image)
         return new_card
-
-    def get_id(self) -> str:
-        # Using this instead of just the name, in case the name is really long or not
-        # very unique
-        return str(hash(self.name + self.creator))
 
 
 if __name__ == '__main__':
