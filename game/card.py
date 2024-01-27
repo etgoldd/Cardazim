@@ -151,6 +151,7 @@ class Card:
             "solution": self.solution,
             "path": self.image_path,
         }
+
     def generate_metadata_json(self) -> str:
         """
         This function receives a card and returns a json-format string of its metadata.

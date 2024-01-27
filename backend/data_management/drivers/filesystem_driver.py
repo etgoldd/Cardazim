@@ -2,7 +2,7 @@ from pathlib import Path
 import json
 import os
 
-from data_management.base_driver import BaseDriver
+from backend.data_management.base_driver import BaseDriver
 from game.card import Card
 
 
