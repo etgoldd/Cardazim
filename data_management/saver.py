@@ -31,7 +31,7 @@ class Saver:
         :return: Whether the generation succeeded
         """
         if dir_path is None:
-            dir_path = Path('.')
+            dir_path = Path('../game')
         file_dir = dir_path / "metadata.json"
         try:
             encoder = json.JSONEncoder()
@@ -48,7 +48,6 @@ class Saver:
 
         return True
 
-
     @staticmethod
     def save(card: Card, dir_path: Path = None):
         """
@@ -60,7 +59,7 @@ class Saver:
         :param dir_path: The directory in which to store the card serialisation
         """
         if dir_path is None:
-            dir_path = Path('.')
+            dir_path = Path('../game')
         card_path = dir_path / card.name
         os.mkdir(card_path)
         card_data = card.serialise()
@@ -72,7 +71,7 @@ class Saver:
     def get_free_id(unsolved_path: Path = None) -> int:
         i = 0
         if unsolved_path is None:
-            unsolved_path = Path('.')
+            unsolved_path = Path('../game')
         while True:
             if not (unsolved_path / str(i)).exists():
                 return i
@@ -88,7 +87,7 @@ class Saver:
         :return:
         """
         if dir_path is None:
-            dir_path = Path('.')
+            dir_path = Path('../data')
         card_path = dir_path / str(Saver.get_free_id(dir_path))
         with open(card_path, mode="wb") as card_file:
             card_file.write(card)

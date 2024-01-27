@@ -6,8 +6,7 @@ import argparse
 
 from networking.listener import Listener
 from networking.connection import Connection
-from game.saver import Saver
-from game.card import Card
+from data_management.saver import Saver
 
 
 def run_server(server_ip: str, server_port: int, card_dir: str) -> NoReturn:
@@ -30,7 +29,7 @@ def manage_conn(connection: Connection, card_dir: Path, lock: threading.Lock):
     """
     with connection as conn:
         card_serialisation = conn.receive_message()
-        Saver.save_serialisation(card_serialisation, card_dir)
+        Saver.  save_serialisation(card_serialisation, card_dir)
     lock.acquire()
     print(f"Received card.")
     lock.release()

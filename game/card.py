@@ -2,11 +2,14 @@ from __future__ import annotations
 from typing import Optional, Any
 from PIL import Image
 import struct
+import json
 
 from game.crypt_image import CryptImage
 
 
 class Card:
+    # It's questionable that Card has serialisation methods, shouldn't that be left
+    # to some sort data management bridge to do?
     name: str
     creator: str
     image: CryptImage
@@ -148,8 +151,52 @@ class Card:
             "solution": self.solution,
             "path": self.image_path,
         }
+    def generate_metadata_json(self) -> str:
+        """
+        This function receives a card and returns a json-format string of its metadata.
+        :return: Whether the generation succeeded
+        """
 
+        try:
+            encoder = json.JSONEncoder()
+            card_json = encoder.encode(self.get_attributes())
+        except TypeError as e:
+            print(
+                f"Something has gone wrong while encoding the card's metadata, here's the card: \n{str(self)} \n raising error...")
+            raise e
+        except ValueError as e:
+            print(
+                f"Something has gone wrong while encoding the card's metadata, here's the card: \n{str(self)} \n raising error...")
+            raise e
 
+        return card_json
+
+    @classmethod
+    def load_from_metadata(cls, metadata: dict) -> Card:
+        new_card = cls()
+        try:
+            new_card.name = metadata["name"]
+            new_card.creator = metadata["creator"]
+            new_card.riddle = metadata["riddle"]
+            new_card.solution = metadata["solution"]
+            new_card.image_path = metadata["path"]
+        except KeyError as e:
+            print("metadata file was poorly generated, and a card couldn't be loaded \n"
+                  f"Offending metadata: \n {metadata}")
+            raise e
+        try:
+            image = Image.open(new_card.image_path)
+        except FileNotFoundError as e:
+            print(f"Path found in metadata file doesn't exist. Here's the metadata \n"
+                  f"f{metadata}")
+            raise e
+        new_card.set_image(image)
+        return new_card
+
+    def get_id(self) -> str:
+        # Using this instead of just the name, in case the name is really long or not
+        # very unique
+        return str(hash(self.name + self.creator))
 
 
 if __name__ == '__main__':

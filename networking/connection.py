@@ -2,7 +2,7 @@ import socket
 import struct
 
 
-from networking.exceptions import DisconnectionException
+from exceptions import DisconnectionException
 
 
 class Connection:
