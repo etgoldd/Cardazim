@@ -173,6 +173,11 @@ class Card:
 
     @classmethod
     def load_from_metadata(cls, metadata: dict) -> Card:
+        """
+        This function receives a metadata dictionary and returns a card object.
+        :param metadata:
+        :return:
+        """
         new_card = cls()
         try:
             new_card.name = metadata["name"]

@@ -42,9 +42,12 @@ class FilesystemDriver(BaseDriver):
         with open(card_path, mode="wb") as card_file:
             card_file.write(card_serialisation)
         return True
-    @staticmethod
 
+    @staticmethod
     def _serialisation_file_to_card(card_path: Path) -> Card:
+        """
+        This function receives a path to a card serialisation file, and returns a card object.
+        """
         with open(card_path, mode='rb') as card_file:
             serialisation = card_file.read()
         card = Card.deserialize(serialisation)
@@ -72,6 +75,10 @@ class FilesystemDriver(BaseDriver):
 
     @staticmethod
     def _json_to_card(metadata_path: Path) -> Card:
+        """
+        This function receives a path to a card metadata file, and returns a card object
+        generated from the given metadata file.
+        """
         with open(metadata_path, mode='r') as metadata_file:
             metadata_json = metadata_file.read()
             metadata = json.loads(metadata_json)
@@ -79,6 +86,9 @@ class FilesystemDriver(BaseDriver):
         return card
 
     def _get_all_solved_cards(self) -> list[Card]:
+        """
+        This function returns a list of all solved cards.
+        """
         solved_card_paths = [Path(card_path) for card_path in os.listdir(self.solved_dir)]
         cards = []
         for card_path in solved_card_paths:
