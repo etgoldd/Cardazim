@@ -1,0 +1,7 @@
+pillow~=10.2.0
+npyscreen~=4.10.5
+pytest~=7.4.4
+fastapi~=0.109.0
+starlette~=0.35.1
+pymongo~=4.6.1
+setuptools~=67.7.2
