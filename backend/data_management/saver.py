@@ -33,11 +33,10 @@ class Saver:
         This function returns a list of all the creators in the creators file.
         :return: A list of all the creators in the creators file.
         """
-        creators = []
         with open(CREATORS_FILE, mode='r') as creators_file:
-            for line in creators_file.readlines():
-                creators.append(line)
-        return creators
+            # readlines was being weird
+            creators = creators_file.read().split("\n")
+            return creators
 
     @staticmethod
     def load_unsolved_card_from_path(path: Path) -> Card:
@@ -78,32 +77,12 @@ class Saver:
         else:
             return self.driver.get_unsolved_cards_by_creator(creator)
 
-
-
-    #
-    # @staticmethod
-    # def get_free_id(unsolved_path: Path = None) -> int:
-    #     i = 0
-    #     if unsolved_path is None:
-    #         unsolved_path = Path('../../game')
-    #     while True:
-    #         if not (unsolved_path / str(i)).exists():
-    #             return i
-    #         # If the file exists, we'll try the next one
-    #         i += 1
-    #
-    # @staticmethod
-    # def save_serialisation(card: bytes, dir_path: Path = None):
-    #     """
-    #     This function receives a card and a path to which to store it, and stores the card under a new directory in
-    #     :param card: The card object to be saved
-    #     :param dir_path: The directory in which to store the card serialisation
-    #     :return:
-    #     """
-    #     if dir_path is None:
-    #         dir_path = Path('../data')
-    #     card_path = dir_path / str(Saver.get_free_id(dir_path))
-    #     with open(card_path, mode="wb") as card_file:
-    #         card_file.write(card)
-    #
-
+if __name__ == '__main__':
+    saver = Saver()
+    name = "test"
+    creator = "testy mctestface"
+    riddle = "i <3 tests"
+    solution = "test" * 4
+    path = "/home/mrsandman/mystuff/arazim/CardazimProject/Cardazim/networking/cheese.jpg"
+    card = Card.create_from_path(name=name, creator=creator, riddle=riddle, solution=solution, path=path)
+    saver.save(card, True)
