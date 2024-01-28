@@ -1,10 +1,9 @@
 from pathlib import Path
-import os
 
 from game.card import Card
 from backend.data_management.driver_manager import DriverManager
 
-CREATORS_FILE = Path('../../data/creators.txt')
+CREATORS_FILE = Path('backend/data/creators.txt')
 
 
 class Saver:
@@ -73,7 +72,7 @@ class Saver:
             print("You must specify either a name or a creator, or both, but not neither.")
             return []
         if solved:
-            self.driver.get_solved_cards(name, creator)
+            return self.driver.get_solved_cards(name, creator)
         if name is not None:
             return self.driver.get_unsolved_card_by_name(name)
         else:
