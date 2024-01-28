@@ -23,15 +23,6 @@ def get_creator_cards(creator: str):
     :return:
     """
     cards = saver.find_cards(True, creator=creator)
-    from game.card import Card
-    name = "test"
-    creator = "testy mctestface"
-    riddle = "i <3 tests"
-    solution = "test" * 4
-    path = "/home/mrsandman/mystuff/arazim/CardazimProject/Cardazim/networking/cheese.jpg"
-    card = Card.create_from_path(name=name, creator=creator, riddle=riddle, solution=solution, path=path)
-    cards = [card]
-    cards = [card.get_attributes() for card in cards]
     return cards
 
 
