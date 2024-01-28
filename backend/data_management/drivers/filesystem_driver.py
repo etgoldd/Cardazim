@@ -106,3 +106,26 @@ class FilesystemDriver(BaseDriver):
             raise FileNotFoundError(f"No such solved card {card_path}\n")
         card = self._json_to_card(card_path / "metadata.json")
         return [card]
+
+    def get_unsolved_cards_by_creator(self, creator: str) -> list[Card]:
+        unsolved_card_paths = [Path(card_path) for card_path in os.listdir(self.unsolved_dir)]
+        cards = []
+        for card_path in unsolved_card_paths:
+            if not card_path.exists():
+                continue
+            card = self._serialisation_file_to_card(card_path)
+            if card.creator == creator:
+                cards.append(card)
+        return cards
+
+    def get_solved_cards_by_creator(self, creator: str) -> list[Card]:
+        solved_card_paths = [Path(card_path) for card_path in os.listdir(self.solved_dir)]
+        cards = []
+        for card_path in solved_card_paths:
+            if not card_path.exists():
+                continue
+            card = self._json_to_card(card_path / "metadata.json")
+            if card.creator == creator:
+                cards.append(card)
+        return cards
+

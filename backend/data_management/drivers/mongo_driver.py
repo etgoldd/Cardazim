@@ -7,9 +7,7 @@ from backend.data_management.base_driver import BaseDriver
 from exceptions import CardNotFound
 from game.card import Card
 
-# This is on a public git, so this url is censored. If needed I'll send it to whoever I need
-# to send it to.
-DEFAULT_MONGO_CONN_STR = ""
+DEFAULT_MONGO_CONN_STR = "mongodb://127.0.0.1:27017"
 DEFAULT_DATABASE_NAME = "CARDAZIM"
 DEFAULT_UNSOLVED_COLLECTION_NAME = "unsolved_cards"
 DEFAULT_SOLVED_COLLECTION_NAME = "solved_cards"
@@ -119,3 +117,31 @@ class MongoDriver(BaseDriver):
             raise CardNotFound(f"No such card with name: '{name}'.")
         card = self._document_to_card(card_document, solved=False)
         return [card]
+
+    def get_unsolved_cards_by_creator(self, creator: str) -> list[Card]:
+        card_documents = self.unsolved_cards_collection.find({'creator': creator})
+        cards = []
+        for card_document in card_documents:
+            card = self._document_to_card(card_document, solved=False)
+            cards.append(card)
+        return cards
+
+    def get_solved_cards_by_creator(self, creator: str) -> list[Card]:
+        card_documents = self.solved_cards_collection.find({'creator': creator})
+        cards = []
+        for card_document in card_documents:
+            card = self._document_to_card(card_document, solved=True)
+            cards.append(card)
+        return cards
+
+    def get_solved_cards(self, name: str = None, creator: str = None) -> list[Card]:
+        if name is None:
+            return self.get_solved_cards_by_creator(creator)
+        if creator is None:
+            return self._get_all_solved_cards()
+        card_documents = self.solved_cards_collection.find({'name': name, 'creator': creator})
+        cards = []
+        for card_document in card_documents:
+            card = self._document_to_card(card_document, solved=True)
+            cards.append(card)
+        return cards

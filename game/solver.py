@@ -56,7 +56,7 @@ class ChooseCardsForm(npyscreen.ActionForm):
         cards = []
         for card_file in card_files:
             card_path = self.unsolved_dir / card_file
-            cards.append(Saver.extract_card(card_path))
+            cards.append(Saver.load_unsolved_card_from_path(card_path))
         return cards
 
     def create(self):
@@ -113,7 +113,7 @@ class SolveCardForm(npyscreen.Form):
         unsolved_files = os.listdir(self.unsolved_dir)
         for unsolved_card_file in unsolved_files:
             file_path = self.unsolved_dir / unsolved_card_file
-            unsolved_card = Saver.extract_card(file_path)
+            unsolved_card = Saver.load_unsolved_card_from_path(file_path)
             if unsolved_card.name == card.name:
                 return file_path
         return None

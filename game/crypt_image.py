@@ -69,3 +69,5 @@ class CryptImage:
         self.image.frombytes(image_data)
         return True
 
+    def get_image_bytes(self) -> bytes:
+        return self.image.tobytes()

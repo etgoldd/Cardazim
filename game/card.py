@@ -201,6 +201,13 @@ class Card:
         new_card.set_image(image)
         return new_card
 
+    def get_image_bytes(self):
+        """
+        This function returns the bytes of the card's image.
+        :return: The bytes of the card's image.
+        """
+        return self.image.get_image_bytes()
+
 
 if __name__ == '__main__':
     name = "test"
